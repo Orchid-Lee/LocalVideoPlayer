@@ -1,133 +1,57 @@
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import VideoCard from './VideoCard.vue'
 import { RouterLink } from 'vue-router'
-const cardList = ref([
-  {
-    image:
-      '	https://i.ytimg.com/vi/xXr4Z7HAZCE/hqdefault.jpg?s…iBLKC8wDw==&rs=AOn4CLDJ_caIq5gf88O7FC7g9ho2bRcsmg',
-    title:
-      'Playlist】夜裡不想說出口的情緒，就讓這些歌代替｜Korean R&B / Chill / Work BGM｜퇴근 후 감성 플레이리스트',
-    desc: '【Playlist】夜裡不想說出口的情緒，就讓這些歌代替｜Korean R&B / Chill / Work BGM｜퇴근 후 감성 플레이리스트',
-    type: 'video',
-    id: '1',
-    url: 'https://lf3-static.bytednsdoc.com/obj/eden-cn/nupenuvpxnuvo/xgplayer_doc/xgplayer-demo.mp4',
-  },
-  {
-    image:
-      'https://i.ytimg.com/vi/yDyNUUXoC9s/hq720.jpg?sqp=-…BACGAY4AUAB&rs=AOn4CLBg2ThndFmAXjDUQuRwJFueDyKYeg',
-    title: '风景卡片1',
-    desc: '这是一片宁静的湖泊，周围环绕着青山，适合周末露营。',
-    type: 'image',
-    id: '2',
-    url: 'https://picsum.photos/id/10/400/225',
-  },
-  {
-    image:
-      'https://i.ytimg.com/vi/HonhCu4Vgmg/hq720.jpg?sqp=-…BACGAY4AUAB&rs=AOn4CLDXiuBNUClTUE_vearKtOv_o2O29A',
-    title: '风景卡片2',
-    desc: '这是一片宁静的湖泊，周围环绕着青山，适合周末露营。',
-    type: 'image',
-    id: '3',
-    url: 'https://picsum.photos/id/10/400/225',
-  },
-  {
-    image:
-      '	https://i.ytimg.com/vi/xXr4Z7HAZCE/hqdefault.jpg?s…iBLKC8wDw==&rs=AOn4CLDJ_caIq5gf88O7FC7g9ho2bRcsmg',
-    title:
-      'Playlist】夜裡不想說出口的情緒，就讓這些歌代替｜Korean R&B / Chill / Work BGM｜퇴근 후 감성 플레이리스트',
-    desc: '【Playlist】夜裡不想說出口的情緒，就讓這些歌代替｜Korean R&B / Chill / Work BGM｜퇴근 후 감성 플레이리스트',
-    type: 'video',
-    id: '1',
-    url: 'https://lf3-static.bytednsdoc.com/obj/eden-cn/nupenuvpxnuvo/xgplayer_doc/xgplayer-demo.mp4',
-  },
-  {
-    image:
-      'https://i.ytimg.com/vi/yDyNUUXoC9s/hq720.jpg?sqp=-…BACGAY4AUAB&rs=AOn4CLBg2ThndFmAXjDUQuRwJFueDyKYeg',
-    title: '风景卡片1',
-    desc: '这是一片宁静的湖泊，周围环绕着青山，适合周末露营。',
-    type: 'image',
-    id: '2',
-    url: 'https://picsum.photos/id/10/400/225',
-  },
-  {
-    image:
-      'https://i.ytimg.com/vi/HonhCu4Vgmg/hq720.jpg?sqp=-…BACGAY4AUAB&rs=AOn4CLDXiuBNUClTUE_vearKtOv_o2O29A',
-    title: '风景卡片2',
-    desc: '这是一片宁静的湖泊，周围环绕着青山，适合周末露营。',
-    type: 'image',
-    id: '3',
-    url: 'https://picsum.photos/id/10/400/225',
-  },
-  {
-    image:
-      '	https://i.ytimg.com/vi/xXr4Z7HAZCE/hqdefault.jpg?s…iBLKC8wDw==&rs=AOn4CLDJ_caIq5gf88O7FC7g9ho2bRcsmg',
-    title:
-      'Playlist】夜裡不想說出口的情緒，就讓這些歌代替｜Korean R&B / Chill / Work BGM｜퇴근 후 감성 플레이리스트',
-    desc: '【Playlist】夜裡不想說出口的情緒，就讓這些歌代替｜Korean R&B / Chill / Work BGM｜퇴근 후 감성 플레이리스트',
-    type: 'video',
-    id: '1',
-    url: 'https://lf3-static.bytednsdoc.com/obj/eden-cn/nupenuvpxnuvo/xgplayer_doc/xgplayer-demo.mp4',
-  },
-  {
-    image:
-      'https://i.ytimg.com/vi/yDyNUUXoC9s/hq720.jpg?sqp=-…BACGAY4AUAB&rs=AOn4CLBg2ThndFmAXjDUQuRwJFueDyKYeg',
-    title: '风景卡片1',
-    desc: '这是一片宁静的湖泊，周围环绕着青山，适合周末露营。',
-    type: 'image',
-    id: '2',
-    url: 'https://picsum.photos/id/10/400/225',
-  },
-  {
-    image:
-      'https://i.ytimg.com/vi/HonhCu4Vgmg/hq720.jpg?sqp=-…BACGAY4AUAB&rs=AOn4CLDXiuBNUClTUE_vearKtOv_o2O29A',
-    title: '风景卡片2',
-    desc: '这是一片宁静的湖泊，周围环绕着青山，适合周末露营。',
-    type: 'image',
-    id: '3',
-    url: 'https://picsum.photos/id/10/400/225',
-  },
-  {
-    image:
-      '	https://i.ytimg.com/vi/xXr4Z7HAZCE/hqdefault.jpg?s…iBLKC8wDw==&rs=AOn4CLDJ_caIq5gf88O7FC7g9ho2bRcsmg',
-    title:
-      'Playlist】夜裡不想說出口的情緒，就讓這些歌代替｜Korean R&B / Chill / Work BGM｜퇴근 후 감성 플레이리스트',
-    desc: '【Playlist】夜裡不想說出口的情緒，就讓這些歌代替｜Korean R&B / Chill / Work BGM｜퇴근 후 감성 플레이리스트',
-    type: 'video',
-    id: '1',
-    url: 'https://lf3-static.bytednsdoc.com/obj/eden-cn/nupenuvpxnuvo/xgplayer_doc/xgplayer-demo.mp4',
-  },
-  {
-    image:
-      'https://i.ytimg.com/vi/yDyNUUXoC9s/hq720.jpg?sqp=-…BACGAY4AUAB&rs=AOn4CLBg2ThndFmAXjDUQuRwJFueDyKYeg',
-    title: '风景卡片1',
-    desc: '这是一片宁静的湖泊，周围环绕着青山，适合周末露营。',
-    type: 'image',
-    id: '2',
-    url: 'https://picsum.photos/id/10/400/225',
-  },
-  {
-    image:
-      'https://i.ytimg.com/vi/HonhCu4Vgmg/hq720.jpg?sqp=-…BACGAY4AUAB&rs=AOn4CLDXiuBNUClTUE_vearKtOv_o2O29A',
-    title: '风景卡片2',
-    desc: '这是一片宁静的湖泊，周围环绕着青山，适合周末露营。',
-    type: 'image',
-    id: '3',
-    url: 'https://picsum.photos/id/10/400/225',
-  },
-])
+import axios from 'axios'
+
+const folders = ref([])
+const loading = ref(true)
+
+onMounted(async () => {
+  try {
+    const response = await fetch('http://127.0.0.1:5000/api/files')
+
+    // 检查响应是否成功
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`)
+    }
+
+    // 将响应体解析为 JSON
+    const data = await response.json()
+
+    // 因为后端返回的是一个数组，且 files 在数组的第一个对象里
+    const [{ files }] = data
+
+    // 将获取到的文件列表赋值给 folders
+    folders.value = files
+
+    console.log(`文件列表:`, folders.value)
+  } catch (error) {
+    console.error('获取文件列表失败:', error)
+  } finally {
+    loading.value = false
+  }
+})
 </script>
 
 <template>
   <div class="card-grid">
-    <div v-for="(item, index) in cardList" :key="item.id" class="card">
+    <div v-for="(folder, index) in folders" :key="folder.folder" class="card">
       <div class="card-content">
-        <RouterLink :to="{ name: 'VideoPlayer', params: { url: item.url, img_url: item.image } }">
+        <RouterLink
+          :to="{
+            name: 'VideoPlayer',
+            params: {
+              url: folder.path,
+              img_url: 'https://www.youtube.com/s/desktop/e5522eef/img/logos/favicon.ico',
+            },
+          }"
+        >
           <VideoCard
             :key="index"
-            :image-src="item.image"
-            :title="item.title"
-            :description="item.desc"
+            :image-src="folder.path"
+            :title="folder.name"
+            :description="folder.name"
           ></VideoCard>
         </RouterLink>
       </div>

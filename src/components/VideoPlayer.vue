@@ -6,10 +6,15 @@ import 'xgplayer/dist/index.min.css'
 
 const route = useRoute()
 
+const getStreamUrl = (filePath) => {
+  const encodedPath = encodeURIComponent(filePath)
+  return `http://127.0.0.1:5000/api/stream?path=${encodedPath}`
+}
+
 onMounted(() => {
   const videoUrl = route.params.url
   const img_url = route.params.img_url
-  console.log('video-url:', videoUrl)
+  console.log('video-url:', getStreamUrl(videoUrl))
   new Player({
     id: 'mse',
     lang: 'zh',
@@ -22,7 +27,7 @@ onMounted(() => {
     // startTime: 40,
     url: [
       {
-        src: videoUrl.toString(),
+        src: getStreamUrl(videoUrl),
         type: 'video/mp4',
       },
     ],
