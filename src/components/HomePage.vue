@@ -2,7 +2,6 @@
 import { onMounted, ref } from 'vue'
 import VideoCard from './VideoCard.vue'
 import { RouterLink } from 'vue-router'
-import axios from 'axios'
 
 const folders = ref([])
 const loading = ref(true)
