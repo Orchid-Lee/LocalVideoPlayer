@@ -35,8 +35,7 @@ defineProps({
   },
   videoSrc: {
     type: String,
-    required: true,
-    default: 'https://video-demo.com',
+    default: '图片',
   },
   imageAlt: {
     type: String,

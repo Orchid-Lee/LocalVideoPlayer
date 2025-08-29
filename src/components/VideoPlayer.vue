@@ -8,7 +8,7 @@ const route = useRoute()
 
 const getStreamUrl = (filePath) => {
   const encodedPath = encodeURIComponent(filePath)
-  return `http://127.0.0.1:5000/api/stream?path=${encodedPath}`
+  return `http://127.0.0.1:8888/api/stream?path=${encodedPath}`
 }
 
 onMounted(() => {

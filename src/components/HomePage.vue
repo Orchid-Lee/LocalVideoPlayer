@@ -1,14 +1,14 @@
 <script lang="ts" setup>
 import { onMounted, ref } from 'vue'
 import VideoCard from './VideoCard.vue'
-import { RouterLink } from 'vue-router'
+import ImageCard from './ImageCard.vue'
 
 const folders = ref([])
 const loading = ref(true)
 
 onMounted(async () => {
   try {
-    const response = await fetch('http://127.0.0.1:5000/api/files')
+    const response = await fetch('http://127.0.0.1:8888/api/files')
 
     // 检查响应是否成功
     if (!response.ok) {
@@ -16,13 +16,12 @@ onMounted(async () => {
     }
 
     // 将响应体解析为 JSON
-    const data = await response.json()
+    const { data } = await response.json()
 
     // 因为后端返回的是一个数组，且 files 在数组的第一个对象里
-    const [{ files }] = data
 
     // 将获取到的文件列表赋值给 folders
-    folders.value = files
+    folders.value = data
 
     console.log(`文件列表:`, folders.value)
   } catch (error) {
@@ -36,23 +35,34 @@ onMounted(async () => {
 <template>
   <div class="card-grid">
     <div v-for="(folder, index) in folders" :key="folder.folder" class="card">
-      <div class="card-content">
+      <div v-if="folder.type === 'video'" class="card-content">
         <RouterLink
           :to="{
             name: 'VideoPlayer',
             params: {
               url: folder.path,
-              img_url: 'https://www.youtube.com/s/desktop/e5522eef/img/logos/favicon.ico',
+              img_url: folder.path,
             },
           }"
         >
           <VideoCard
             :key="index"
-            :image-src="folder.path"
-            :title="folder.name"
+            :videoSrc="folder.path"
+            :imageSrc="folder.poster_path"
+            :title="folder.poster_path"
             :description="folder.name"
           ></VideoCard>
         </RouterLink>
+      </div>
+      <div v-else>
+        <ImageCard
+          :key="index"
+          :image-src="folder.path"
+          :video-src="folder.path"
+          :title="folder.name"
+          :description="folder.name"
+        >
+        </ImageCard>
       </div>
     </div>
   </div>
