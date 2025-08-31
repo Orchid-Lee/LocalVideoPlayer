@@ -1,11 +1,10 @@
 <template>
   <!-- 卡片容器：控制整体大小、阴影、圆角 -->
-  <div class="card" @mouseenter="isHover = true" @mouseleave="isHover = false">
+  <div class="card" @mouseenter="isHover = true" @mouseleave="isHover = false" @click="handleClick">
     <!-- 图片区域：控制比例、溢出裁剪 -->
     <div class="card__image-container">
       <img
-        :src="getStreamUrl(imageSrc)"
-        :alt="imageAlt"
+        :src="getStreamUrl(imageSrc) || defaultImage"
         class="card__image"
         :class="{ 'card__image--hover': isHover }"
       />
@@ -13,47 +12,54 @@
     <!-- 文本区域：控制内边距、字体样式 -->
     <div class="card__content">
       <h3 class="card__title">{{ title }}</h3>
-      <p class="card__desc">{{ description }}</p>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
 import { ref } from 'vue'
+import router from '@/router'
+import { type FileData } from '@/types'
 
-const getStreamUrl = (filePath) => {
+// 定义默认图片路径（假设在src/assets目录下）
+import defaultImage from '@/assets/images/video.poster.jpg'
+
+// 定义 hover 状态（控制交互效果）
+const isHover = ref(false)
+
+// 获取图片文件流信息
+const getStreamUrl = (filePath: string): string | null => {
+  if (filePath.toLowerCase().endsWith('.mp4')) {
+    return null
+  }
+
   const encodedPath = encodeURIComponent(filePath)
   return `http://127.0.0.1:8888/api/stream?path=${encodedPath}`
 }
 
-// 1. 定义组件 props（外部传入的动态数据）
-defineProps({
-  imageSrc: {
-    type: String,
-    required: true, // 图片地址为必填项
-    default: 'https://picsum.photos/400/225', // 默认占位图（picsum 提供免费测试图）
-  },
-  videoSrc: {
-    type: String,
-    default: '图片',
-  },
-  imageAlt: {
-    type: String,
-    default: '卡片图片', // 图片alt属性（无障碍访问）
-  },
-  title: {
-    type: String,
-    required: true,
-    default: '卡片标题',
-  },
-  description: {
-    type: String,
-    default: '这里是卡片的详细描述文本，支持多行显示，超出部分会自动省略。',
-  },
-})
+// 定义组件 props（外部传入的动态数据）
+const props = defineProps<{
+  imageSrc: string
+  title: string
+  fileData: FileData[]
+}>()
 
-// 2. 定义 hover 状态（控制交互效果）
-const isHover = ref(false)
+const handleClick = () => {
+  try {
+    // 1. 序列化文件数据（避免URL特殊字符问题）
+    const folderStr: string = JSON.stringify(props.fileData)
+    const encodedFiles = encodeURIComponent(folderStr)
+
+    router.push({
+      name: 'FileItemList',
+      query: {
+        fileData: encodedFiles,
+      },
+    })
+  } catch (err) {
+    console.log('跳转失败:', err)
+  }
+}
 </script>
 
 <style scoped>

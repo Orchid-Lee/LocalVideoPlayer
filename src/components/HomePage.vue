@@ -1,72 +1,80 @@
+<template>
+  <div class="card-grid">
+    <div v-for="(folder, index) in folders" :key="folder.folder" class="card">
+      <div class="card-content">
+        <PosterCard
+          :key="index"
+          :imageSrc="folder.poster_path"
+          :title="folder.poster_path"
+          :fileData="folder.files"
+        >
+        </PosterCard>
+      </div>
+    </div>
+  </div>
+</template>
+
 <script lang="ts" setup>
 import { onMounted, ref } from 'vue'
-import VideoCard from './VideoCard.vue'
-import ImageCard from './ImageCard.vue'
+import PosterCard from './PosterCard.vue'
+import { Folder } from '@/types'
 
-const folders = ref([])
+// 媒体文件夹信息
+const folders = ref<Folder[]>([])
 const loading = ref(true)
+const error = ref<string | null>(null) // 新增错误状态管理
+
+const featchFolders = async (): Promise<Folder[]> => {
+  try {
+    const response = await fetch('http://localhost:8888/api/folders', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      // 可添加超时控制 5s超时
+      signal: AbortSignal.timeout(5000),
+    })
+
+    if (!response.ok) {
+      // 更详细的错误信息
+      const errorData = await response.json().catch(() => ({}))
+      throw new Error(`获取文件夹失败: ${errorData.message || `HTTP状态码: ${response.status}`}`)
+    }
+
+    const { data } = await response.json()
+
+    if (!Array.isArray(data)) {
+      throw new Error('接口返回数据格式不正确，期望数组')
+    }
+
+    return data as Folder[]
+  } catch (err) {
+    if (err instanceof Error) {
+      if (err.name === 'AbortError') {
+        throw new Error('请求超时，请稍后重试')
+      }
+      throw new Error(err.message)
+    }
+    throw new Error('获取文件夹信息时发生未知错误')
+  }
+}
 
 onMounted(async () => {
   try {
-    const response = await fetch('http://127.0.0.1:8888/api/files')
-
-    // 检查响应是否成功
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`)
-    }
-
-    // 将响应体解析为 JSON
-    const { data } = await response.json()
-
-    // 因为后端返回的是一个数组，且 files 在数组的第一个对象里
-
+    loading.value = true
+    // 重置错误状态
+    error.value = null
+    const data = await featchFolders()
     // 将获取到的文件列表赋值给 folders
     folders.value = data
-
-    console.log(`文件列表:`, folders.value)
-  } catch (error) {
-    console.error('获取文件列表失败:', error)
+  } catch (err) {
+    error.value = err instanceof Error ? err.message : '获取文件列表失败'
+    console.error('获取文件列表失败:', err)
   } finally {
     loading.value = false
   }
 })
 </script>
-
-<template>
-  <div class="card-grid">
-    <div v-for="(folder, index) in folders" :key="folder.folder" class="card">
-      <div v-if="folder.type === 'video'" class="card-content">
-        <RouterLink
-          :to="{
-            name: 'VideoPlayer',
-            params: {
-              url: folder.path,
-              img_url: folder.path,
-            },
-          }"
-        >
-          <VideoCard
-            :key="index"
-            :videoSrc="folder.path"
-            :imageSrc="folder.poster_path"
-            :title="folder.poster_path"
-            :description="folder.name"
-          ></VideoCard>
-        </RouterLink>
-      </div>
-      <div v-else>
-        <ImageCard
-          :key="index"
-          :image-src="folder.path"
-          :video-src="folder.path"
-          :title="folder.name"
-          :description="folder.name"
-        >
-        </ImageCard>
-      </div>
-    </div>
-  </div>
-</template>
 
 <style scoped>
 .card-grid {

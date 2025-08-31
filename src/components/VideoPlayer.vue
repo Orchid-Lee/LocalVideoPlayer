@@ -1,25 +1,32 @@
+<template>
+  <div id="mse"></div>
+</template>
+
 <script lang="ts" setup>
 import Player from 'xgplayer'
-import { onMounted } from 'vue'
-import { useRoute } from 'vue-router'
+import { onMounted, defineProps } from 'vue'
 import 'xgplayer/dist/index.min.css'
-
-const route = useRoute()
+import { useRouter } from 'vue-router'
 
 const getStreamUrl = (filePath) => {
   const encodedPath = encodeURIComponent(filePath)
   return `http://127.0.0.1:8888/api/stream?path=${encodedPath}`
 }
 
+const route = useRoute()
+const params = route.params
+
+const props = defineProps<{
+  videoUrl: string
+  posterUrl: string
+}>()
+
 onMounted(() => {
-  const videoUrl = route.params.url
-  const img_url = route.params.img_url
-  console.log('video-url:', getStreamUrl(videoUrl))
   new Player({
     id: 'mse',
     lang: 'zh',
     volume: 0,
-    autoplay: true,
+    autoplay: false,
     autoplayMuted: true,
     // screenShot: true,
     // defaultPlaybackRate: 2.0,
@@ -27,18 +34,18 @@ onMounted(() => {
     // startTime: 40,
     url: [
       {
-        src: getStreamUrl(videoUrl),
+        src: getStreamUrl(props.videoUrl),
         type: 'video/mp4',
       },
     ],
-    poster: img_url,
+    poster: props.posterUrl,
     // fluid: true, // 填满屏幕 （流式布局）
     playbackRate: [0.5, 0.75, 1, 1.5, 2], //传入倍速可选数组
-    // height: '100%',
-    width: '100%',
+    height: 200,
+    width: 250,
     // width: 1280,
     // height: 600,
-    fitVideoSize: 'fixHeight',
+    // fitVideoSize: 'fixHeight',
     playsinline: true,
     progressDot: [
       {
@@ -62,10 +69,6 @@ onMounted(() => {
   console.log(result ? 'support h265!' : "Don't support!")
 })
 </script>
-
-<template>
-  <div id="mse"></div>
-</template>
 
 <styele scoped>
 
